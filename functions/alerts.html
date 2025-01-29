@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Alerts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Attendance Alerts</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Title</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody id="alerts-container">
+        </tbody>
+    </table>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+    apiKey: "AIzaSyDHVqbe02BgbKj4UTJRrImuRO0AB3D6r5s",
+    authDomain: "student-management-6c41d.firebaseapp.com",
+    projectId: "student-management-6c41d",
+    storageBucket: "student-management-6c41d.firebasestorage.app",
+    messagingSenderId: "38450493030",
+    appId: "1:38450493030:web:5a29aa86fe9dc480e2dfa7"
+  };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const displayAlerts = async () => {
+            const alertsRef = collection(db, "alerts");
+            const alertsSnapshot = await getDocs(alertsRef);
+            const alertsContainer = document.getElementById('alerts-container');
+
+            alertsSnapshot.forEach((doc) => {
+                const alert = doc.data();
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${alert.studentName}</td><td>${alert.title}</td><td>${alert.message}</td>`;
+                alertsContainer.appendChild(row);
+            });
+        };
+
+        displayAlerts();
+    </script>
+</body>
+</html>
